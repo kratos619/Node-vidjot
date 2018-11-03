@@ -47,6 +47,11 @@ app.get('/about', (request, response) => {
   response.render('about');
 });
 
+//add ideas router
+app.get('/idea/add', (request, response) => {
+  response.render('idea/add');
+});
+
 const port = 4000;
 
 app.listen();
