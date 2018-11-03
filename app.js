@@ -2,6 +2,7 @@ const express = require('express');
 const exphbs = require('express-handlebars');
 // add mongoose connect to db
 const mongodb = require('mongoose');
+const bodyParser = require('body-parser');
 
 const app = express();
 //map global promis - get rid of warning
@@ -34,6 +35,12 @@ app.engine(
 );
 app.set('view engine', 'handlebars');
 
+// body parser middle wares
+app.use(bodyParser.urlencoded({ extended: false }));
+
+// parse application/json
+app.use(bodyParser.json());
+
 // routes Inex
 app.get('/', (request, response) => {
   let title = 'index';
@@ -50,6 +57,13 @@ app.get('/about', (request, response) => {
 //add ideas router
 app.get('/idea/add', (request, response) => {
   response.render('idea/add');
+});
+
+// proess forms
+app.post('/idea', (req, res) => {
+  console.log(req.body);
+
+  res.send('ok');
 });
 
 const port = 4000;
