@@ -1,1 +1,17 @@
-<h1>add</h1>
+<div class="card ">
+    {{!-- <img class="card-img-top" src="" alt=""> --}}
+    <div class="card-body">
+        <h4 class="card-title">Add Forms</h4>
+        <form action="/idea" method="post">
+            <div class="form-group">
+                <label for="title">Title</label>
+                <input type="text" class="form-control" required name="title">
+            </div>
+            <div class="form-group">
+                <label for="title">Details</label>
+                <textarea type="text" class="form-control" name="details" required> </textarea>
+            </div>
+            <button type="submit" class="btn btn-outline btn-danger">Add Details</button>
+        </form>
+    </div>
+</div>
