@@ -61,9 +61,25 @@ app.get('/idea/add', (request, response) => {
 
 // proess forms
 app.post('/idea', (req, res) => {
-  console.log(req.body);
+  let errors = [];
 
-  res.send('ok');
+  if (!req.body.title) {
+    errors.push = [{ text: 'Please Add Some Details' }];
+  }
+
+  if (!req.body.details) {
+    errors.push = [{ text: 'Please Add Some Details' }];
+  }
+
+  if (errors.length > 0) {
+    res.render('idea/add', {
+      errors: errors,
+      title: req.body.title,
+      details: req.body.details
+    });
+  } else {
+    res.send('passed');
+  }
 });
 
 const port = 4000;
