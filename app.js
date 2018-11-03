@@ -21,6 +21,10 @@ mongodb
     console.log(err);
   });
 
+// Load Idea Model
+require('./models/Idea');
+const idea = mongodb.model('idea');
+
 //handleBar js middle wares
 app.engine(
   'handlebars',
