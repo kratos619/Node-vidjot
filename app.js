@@ -1,7 +1,25 @@
 const express = require('express');
 const exphbs = require('express-handlebars');
+// add mongoose connect to db
+const mongodb = require('mongoose');
 
 const app = express();
+//map global promis - get rid of warning
+mongodb.Promise = global.Promise;
+// connect to mongoose
+mongodb
+  .connect(
+    'mongodb://localhost/vidjot-dev',
+    {
+      useMongoClient: true
+    }
+  )
+  .then(() => {
+    console.log('mogodb_connect');
+  })
+  .catch(err => {
+    console.log(err);
+  });
 
 //handleBar js middle wares
 app.engine(
