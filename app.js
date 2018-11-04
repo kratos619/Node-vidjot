@@ -10,8 +10,7 @@ mongodb.Promise = global.Promise;
 // connect to mongoose
 mongodb
   .connect(
-    'mongodb://localhost/vidjot-dev',
-    {
+    'mongodb://localhost/vidjot-dev', {
       useMongoClient: true
     }
   )
@@ -24,7 +23,7 @@ mongodb
 
 // Load Idea Model
 require('./models/Idea');
-const idea = mongodb.model('idea');
+const Idea = mongodb.model('idea');
 
 //handleBar js middle wares
 app.engine(
@@ -36,7 +35,9 @@ app.engine(
 app.set('view engine', 'handlebars');
 
 // body parser middle wares
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({
+  extended: false
+}));
 
 // parse application/json
 app.use(bodyParser.json());
@@ -64,11 +65,15 @@ app.post('/idea', (req, res) => {
   let errors = [];
 
   if (!req.body.title) {
-    errors.push = [{ text: 'Please Add Some Details' }];
+    errors.push({
+      text: 'Please Add Some Details'
+    });
   }
 
   if (!req.body.details) {
-    errors.push = [{ text: 'Please Add Some Details' }];
+    errors.push({
+      text: 'Please Add Some Details'
+    });
   }
 
   if (errors.length > 0) {
@@ -78,7 +83,15 @@ app.post('/idea', (req, res) => {
       details: req.body.details
     });
   } else {
-    res.send('passed');
+    // add to db
+    const newUser = {
+      title: req.body.title,
+      details: req.body.details
+    };
+    //   call schema
+    new Idea(newUser).save().then(idea => {
+      res.redirect('/idea');
+    });
   }
 });
 
