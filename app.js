@@ -16,8 +16,7 @@ mongoose.Promise = global.Promise;
 // Connect to mongoose
 mongoose
   .connect(
-    'mongodb://localhost/vidjot-dev',
-    {
+    'mongodb://localhost/vidjot-dev', {
       useNewUrlParser: true
     }
   )
@@ -39,7 +38,7 @@ app.use(flash());
 
 // global variables
 
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   res.locals.success_msg = req.flash('success_msg');
   res.locals.error_msg = req.flash('error_msg');
   res.locals.error = req.flash('error');
