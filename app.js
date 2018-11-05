@@ -2,6 +2,7 @@ const express = require('express');
 const exphbs = require('express-handlebars');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+var methodOverride = require('method-override');
 
 const app = express();
 
@@ -23,6 +24,8 @@ require('./models/Idea');
 const Idea = mongoose.model('ideas');
 
 // Handlebars Middleware
+// override with POST having ?_method=DELETE
+app.use(methodOverride('_method'));
 app.engine(
   'handlebars',
   exphbs({
@@ -122,6 +125,20 @@ app.post('/ideas', (req, res) => {
       res.redirect('/ideas');
     });
   }
+});
+
+//update form frocess
+
+app.put('/ideas/:id', (req, res) => {
+  Idea.findOne({
+    _id: req.params.id
+  }).then(idea => {
+    idea.title = req.body.title;
+    idea.details = req.body.details;
+    idea.save().then(idea => {
+      res.redirect('/ideas');
+    });
+  });
 });
 
 const port = 5000;
