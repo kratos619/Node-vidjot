@@ -5,9 +5,12 @@ const exphbs = require('express-handlebars');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 var methodOverride = require('method-override');
-
+const passport = require('passport');
 const ideas = require('./routers/ideas');
 const users = require('./routers/users');
+
+//passport config
+require('./config/passport')(passport);
 
 const app = express();
 
@@ -16,7 +19,8 @@ mongoose.Promise = global.Promise;
 // Connect to mongoose
 mongoose
   .connect(
-    'mongodb://localhost/vidjot-dev', {
+    'mongodb://localhost/vidjot-dev',
+    {
       useNewUrlParser: true
     }
   )
@@ -38,7 +42,7 @@ app.use(flash());
 
 // global variables
 
-app.use(function (req, res, next) {
+app.use(function(req, res, next) {
   res.locals.success_msg = req.flash('success_msg');
   res.locals.error_msg = req.flash('error_msg');
   res.locals.error = req.flash('error');
