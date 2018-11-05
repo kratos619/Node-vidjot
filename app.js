@@ -166,6 +166,7 @@ app.put('/ideas/:id', (req, res) => {
 
 app.delete('/ideas/:id', (req, res) => {
   Idea.deleteOne({ _id: req.params.id }).then(() => {
+    req.flash('success_msg', 'Content Delete Successfully ');
     res.redirect('/ideas');
   });
 });
