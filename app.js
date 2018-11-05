@@ -7,6 +7,7 @@ const mongoose = require('mongoose');
 var methodOverride = require('method-override');
 
 const ideas = require('./routers/ideas');
+const users = require('./routers/users');
 
 const app = express();
 
@@ -78,7 +79,7 @@ const port = 5000;
 
 //use ideas routes
 app.use('/ideas', ideas);
-
+app.use('/users', users);
 app.listen(port, () => {
   console.log(`Server started on port ${port}`);
 });
