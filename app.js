@@ -8,9 +8,13 @@ const app = express();
 // Map global promise - get rid of warning
 mongoose.Promise = global.Promise;
 // Connect to mongoose
-mongoose.connect('mongodb://localhost/vidjot-dev', {
-    useNewUrlParser: true
-  })
+mongoose
+  .connect(
+    'mongodb://localhost/vidjot-dev',
+    {
+      useNewUrlParser: true
+    }
+  )
   .then(() => console.log('MongoDB Connected...'))
   .catch(err => console.log(err));
 
@@ -19,16 +23,21 @@ require('./models/Idea');
 const Idea = mongoose.model('ideas');
 
 // Handlebars Middleware
-app.engine('handlebars', exphbs({
-  defaultLayout: 'main'
-}));
+app.engine(
+  'handlebars',
+  exphbs({
+    defaultLayout: 'main'
+  })
+);
 app.set('view engine', 'handlebars');
 
 // Body parser middleware
-app.use(bodyParser.urlencoded({
-  extended: false
-}))
-app.use(bodyParser.json())
+app.use(
+  bodyParser.urlencoded({
+    extended: false
+  })
+);
+app.use(bodyParser.json());
 
 // Index Route
 app.get('/', (req, res) => {
@@ -61,6 +70,28 @@ app.get('/ideas/add', (req, res) => {
   res.render('ideas/add');
 });
 
+//edit  Idea Form
+// app.get('/ideas/edit/:id', (req, res) => {
+//   Idea.findOne({
+//     _id: req.param.id
+//   }).then(idea => {
+//     res.render('ideas/edit', {
+//       idea: idea
+//     });
+//   });
+// });
+
+// Edit Idea Form
+app.get('/ideas/edit/:id', (req, res) => {
+  Idea.findOne({
+    _id: req.params.id
+  }).then(idea => {
+    res.render('ideas/edit', {
+      idea: idea
+    });
+  });
+});
+
 // Process Form
 app.post('/ideas', (req, res) => {
   let errors = [];
@@ -86,12 +117,10 @@ app.post('/ideas', (req, res) => {
     const newUser = {
       title: req.body.title,
       details: req.body.details
-    }
-    new Idea(newUser)
-      .save()
-      .then(idea => {
-        res.redirect('/ideas');
-      })
+    };
+    new Idea(newUser).save().then(idea => {
+      res.redirect('/ideas');
+    });
   }
 });
 
