@@ -1,4 +1,6 @@
 const express = require('express');
+const flash = require('connect-flash');
+const session = require('express-session');
 const exphbs = require('express-handlebars');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
@@ -26,6 +28,25 @@ const Idea = mongoose.model('ideas');
 // Handlebars Middleware
 // override with POST having ?_method=DELETE
 app.use(methodOverride('_method'));
+// sessio middleware
+app.use(
+  session({
+    secret: 'secret',
+    resave: false,
+    saveUninitialized: true
+  })
+);
+app.use(flash());
+
+// global variables
+
+app.use(function(req, res, next) {
+  res.locals.success_msg = req.flash('success_msg');
+  res.locals.error_msg = req.flash('error_msg');
+  res.locals.error = req.flash('error');
+  next();
+});
+
 app.engine(
   'handlebars',
   exphbs({
