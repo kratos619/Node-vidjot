@@ -12,6 +12,16 @@ router.get('/login', (req, res) => {
   res.render('users/login');
 });
 
+//login
+
+router.post('/login', (req, res, next) => {
+  passport.authenticate('local', {
+    successRedirect: '/ideas',
+    failureRedirect: '/users/login',
+    failureFlash: true
+  })(req, res, next);
+});
+
 // user Register
 router.get('/register', (req, res) => {
   res.render('users/register');
