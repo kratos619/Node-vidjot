@@ -1,104 +1,102 @@
 const express = require('express');
 const exphbs = require('express-handlebars');
-// add mongoose connect to db
-const mongodb = require('mongoose');
 const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
 
 const app = express();
-//map global promis - get rid of warning
-mongodb.Promise = global.Promise;
-// connect to mongoose
-mongodb
-  .connect(
-    'mongodb://localhost/vidjot-dev', {
-      useMongoClient: true
-    }
-  )
-  .then(() => {
-    console.log('mogodb_connect');
+
+// Map global promise - get rid of warning
+mongoose.Promise = global.Promise;
+// Connect to mongoose
+mongoose.connect('mongodb://localhost/vidjot-dev', {
+    useNewUrlParser: true
   })
-  .catch(err => {
-    console.log(err);
-  });
+  .then(() => console.log('MongoDB Connected...'))
+  .catch(err => console.log(err));
 
 // Load Idea Model
 require('./models/Idea');
-const Idea = mongodb.model('idea');
+const Idea = mongoose.model('ideas');
 
-//handleBar js middle wares
-app.engine(
-  'handlebars',
-  exphbs({
-    defaultLayout: 'main'
-  })
-);
+// Handlebars Middleware
+app.engine('handlebars', exphbs({
+  defaultLayout: 'main'
+}));
 app.set('view engine', 'handlebars');
 
-// body parser middle wares
+// Body parser middleware
 app.use(bodyParser.urlencoded({
   extended: false
-}));
+}))
+app.use(bodyParser.json())
 
-// parse application/json
-app.use(bodyParser.json());
-
-// routes Inex
-app.get('/', (request, response) => {
-  let title = 'index';
-  response.render('index', {
+// Index Route
+app.get('/', (req, res) => {
+  const title = 'Welcome';
+  res.render('index', {
     title: title
   });
 });
 
-// about route
-app.get('/about', (request, response) => {
-  response.render('about');
+// About Route
+app.get('/about', (req, res) => {
+  res.render('about');
 });
 
-//add ideas router
-app.get('/idea/add', (request, response) => {
-  response.render('idea/add');
+// Idea Index Page
+app.get('/ideas', (req, res) => {
+  Idea.find({})
+    .sort({
+      date: 'desc'
+    })
+    .then(ideas => {
+      res.render('ideas/index', {
+        ideas: ideas
+      });
+    });
 });
 
-// proess forms
-app.post('/idea', (req, res) => {
+// Add Idea Form
+app.get('/ideas/add', (req, res) => {
+  res.render('ideas/add');
+});
+
+// Process Form
+app.post('/ideas', (req, res) => {
   let errors = [];
 
   if (!req.body.title) {
     errors.push({
-      text: 'Please Add Some Details'
+      text: 'Please add a title'
     });
   }
-
   if (!req.body.details) {
     errors.push({
-      text: 'Please Add Some Details'
+      text: 'Please add some details'
     });
   }
 
   if (errors.length > 0) {
-    res.render('idea/add', {
+    res.render('ideas/add', {
       errors: errors,
       title: req.body.title,
       details: req.body.details
     });
   } else {
-    // add to db
     const newUser = {
       title: req.body.title,
       details: req.body.details
-    };
-    //   call schema
-    new Idea(newUser).save().then(idea => {
-      res.redirect('/idea');
-    });
+    }
+    new Idea(newUser)
+      .save()
+      .then(idea => {
+        res.redirect('/ideas');
+      })
   }
 });
 
-const port = 4000;
-
-app.listen();
+const port = 5000;
 
 app.listen(port, () => {
-  console.log(`hello world poer ${port}`);
+  console.log(`Server started on port ${port}`);
 });
