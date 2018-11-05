@@ -143,6 +143,7 @@ app.post('/ideas', (req, res) => {
       details: req.body.details
     };
     new Idea(newUser).save().then(idea => {
+      req.flash('success_msg', 'Content Added Successfully ');
       res.redirect('/ideas');
     });
   }
@@ -157,6 +158,7 @@ app.put('/ideas/:id', (req, res) => {
     idea.title = req.body.title;
     idea.details = req.body.details;
     idea.save().then(idea => {
+      req.flash('success_msg', 'Content Update Successfully ');
       res.redirect('/ideas');
     });
   });
