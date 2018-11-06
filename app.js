@@ -9,6 +9,9 @@ const passport = require('passport');
 const ideas = require('./routers/ideas');
 const users = require('./routers/users');
 
+// db cofig
+
+const db = require('./config/database')
 //passport config
 require('./config/passport')(passport);
 
@@ -19,8 +22,7 @@ mongoose.Promise = global.Promise;
 // Connect to mongoose
 mongoose
   .connect(
-    'mongodb://localhost/vidjot-dev',
-    {
+    db.mongoURI, {
       useNewUrlParser: true
     }
   )
@@ -46,7 +48,7 @@ app.use(flash());
 
 // global variables
 
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   res.locals.success_msg = req.flash('success_msg');
   res.locals.error_msg = req.flash('error_msg');
   res.locals.error = req.flash('error');
@@ -83,7 +85,8 @@ app.get('/about', (req, res) => {
   res.render('about');
 });
 
-const port = 5000;
+const port = process.env.PORT || 5000;
+
 
 //use ideas routes
 app.use('/ideas', ideas);
