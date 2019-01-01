@@ -3,9 +3,7 @@ const router = express.Router();
 const mongoose = require('mongoose');
 
 //authentication accessmodifires
-const {
-  ensureAuthenticated
-} = require('../helpers/auth');
+const { ensureAuthenticated } = require('../helpers/auth');
 
 // Load Idea Model
 require('../models/Idea');
@@ -14,9 +12,9 @@ const Idea = mongoose.model('ideas');
 // Idea Index Page
 router.get('/', ensureAuthenticated, (req, res) => {
   Idea.find({
-      //only user who create his vido idea can see his ideas
-      user: req.user.id
-    })
+    //only user who create his vido idea can see his ideas
+    user: req.user.id
+  })
     .sort({
       date: 'desc'
     })
